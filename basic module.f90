@@ -1,4 +1,4 @@
-module basis_module
+	module basis_module
   ! Defines data structures for Gaussian basis sets
   implicit none
   private
