@@ -1,4 +1,24 @@
 module ao_integrals
+  ! Performance-optimized AO integrals via iterative Obara–Saika with tunable Boys caching
+  use basis_module
+  use constants_module
+  implicit none
+  private
+  public :: init_boys_cache, compute_overlap_OS, compute_eri_OS, get_boys
+
+  integer, parameter :: dp = kind(1.0d0)
+  ! Default cache parameters (tweak for your system)
+  integer, parameter :: boys_default_nT   = 200       ! number of T-grid points
+  real(dp), parameter :: boys_default_Tmin = 0.0_dp    ! minimum T
+  real(dp), parameter :: boys_default_Tmax = 50.0_dp   ! maximum T
+
+  ! Boys cache storage
+  integer :: boys_mmax = -1
+  integer :: boys_nT   = -1
+  real(dp) :: boys_Tmin, boys_Tmax, boys_dT
+  real(dp), allocatable :: boys_table(:,:)
+
+contains
   ! Performance-optimized AO integrals via iterative Obara–Saika with Boys caching
   use basis_module
   use constants_module
@@ -8,9 +28,12 @@ module ao_integrals
 
   integer, parameter :: dp = kind(1.0d0)
 
-  ! Boys caching parameters
+  ! Boys caching parameters (tunable grid)
+  integer, parameter :: boys_default_nT    = 200       ! number of T-grid points (fine mesh)
+  real(dp),  parameter :: boys_default_Tmin = 0.0_dp    ! minimum T
+  real(dp),  parameter :: boys_default_Tmax = 50.0_dp   ! maximum T
   integer :: boys_mmax = -1
-  integer :: boys_nT = -1
+  integer :: boys_nT   = -1
   real(dp) :: boys_Tmin, boys_Tmax, boys_dT
   real(dp), allocatable :: boys_table(:,:)
 
